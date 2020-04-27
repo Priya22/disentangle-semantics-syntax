@@ -8,7 +8,8 @@ from tensorboardX import SummaryWriter
 from config import EVAL_YEAR
 
 best_dev_res = test_bm_res = test_avg_res = 0
-
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def run(e):
     global best_dev_res, test_bm_res, test_avg_res
@@ -32,7 +33,7 @@ def run(e):
     start_epoch = true_it = 0
     if e.config.resume:
         start_epoch, _, best_dev_res, test_avg_res = \
-            model.load(name="latest")
+            model.load(name="latest_bible")
         if e.config.use_cuda:
             model.cuda()
             e.log.info("transferred model to gpu")
@@ -146,7 +147,8 @@ def run(e):
                         test_avg=test_avg_res,
                         test_perf=test_stats,
                         iteration=true_it,
-                        epoch=epoch)
+                        epoch=epoch,
+                        name = 'best_bible')
 
                     if e.config.summarize:
                         for year, stats in test_stats.items():
@@ -185,7 +187,7 @@ def run(e):
             test_perf=test_stats,
             iteration=true_it,
             epoch=epoch + 1,
-            name="latest")
+            name="latest_bible")
 
     e.log.info("*" * 25 + " TEST EVAL: SEMANTICS " + "*" * 25)
 

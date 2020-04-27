@@ -6,11 +6,11 @@ python train.py \
     --decoder_type bag_of_words \
     --yencoder_type word_avg \
     --zencoder_type word_avg \
-    --n_epoch 50 \
-    --train_file para-nmt-0.5m-processed.txt \
+    --n_epoch 20 \
+    --train_file bible_train.txt \
     --eval_file sts_data.pkl \
     --pre_train_emb 0 \
-    --vocab_file para-nmt-0.5m-vocab \
+    --vocab_file bible-vocab \
     --vocab_size 50000 \
     --batch_size 30 \
     --dropout 0.0 \
@@ -33,4 +33,4 @@ python train.py \
     --p_scramble 0.0 \
     --print_every 100 \
     --eval_every 1000 \
-    --summarize 0
+    --summarize 1

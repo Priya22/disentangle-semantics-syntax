@@ -98,13 +98,13 @@ class base(nn.Module):
         batch_size, seq_len = mask.size()
         # batch size x seq len x MAX LEN
         logits = self.pos_decode(vecs)
-        if MAX_LEN - seq_len:
+        if (MAX_LEN - seq_len) > 0:
             padded = torch.zeros(batch_size, MAX_LEN - seq_len)
             new_mask = 1 - torch.cat([mask, self.to_var(padded)], -1)
         else:
             new_mask = 1 - mask
         new_mask = new_mask.unsqueeze(1).expand_as(logits)
-        logits.data.masked_fill_(new_mask.data.byte(), -float('inf'))
+        logits.data.masked_fill_(new_mask.data.bool(), -float('inf'))
         loss = F.softmax(logits, -1)[:, np.arange(int(seq_len)),
                                      np.arange(int(seq_len))]
         loss = -(loss + self.eps).log() * mask

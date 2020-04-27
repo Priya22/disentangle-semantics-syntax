@@ -13,7 +13,7 @@ class IveFunction(torch.autograd.Function):
         ctx.v = v
         ctx.save_for_backward(z)
 
-        z_cpu = z.cpu().numpy()
+        z_cpu = z.cpu().detach().numpy()
 
         if np.isclose(v, 0):
             output = scipy.special.i0e(z_cpu, dtype=np.double)

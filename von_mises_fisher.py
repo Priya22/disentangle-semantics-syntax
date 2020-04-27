@@ -127,7 +127,7 @@ class VonMisesFisher(torch.nn.Module):
             t = (2 * a * b) / (1 - (1 - b) * e_)
 
             accept = ((self.__m - 1) * t.log() - t + d) > torch.log(u)
-            reject = (1 - accept.long()).byte()
+            reject = (1 - accept.long()).bool()
 
             accept_mask = (bool_mask * accept).detach()
             if accept_mask.sum().data.cpu().numpy().item():

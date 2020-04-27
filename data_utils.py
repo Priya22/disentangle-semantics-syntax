@@ -111,7 +111,9 @@ class data_processor:
                         data_pair1.append(line[0].split(" "))
                         data_pair2.append(line[1].split(" "))
                     else:
-                        self.expe.log.warning("unexpected data: " + line)
+                        #self.expe.log.warning("unexpected data: " + line)
+                        print("bad line", line)
+                        
         assert len(data_pair1) == len(data_pair2)
         return data_pair1, data_pair2
 
