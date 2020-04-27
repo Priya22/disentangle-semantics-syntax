@@ -98,6 +98,7 @@ class base(nn.Module):
         batch_size, seq_len = mask.size()
         # batch size x seq len x MAX LEN
         logits = self.pos_decode(vecs)
+        print("DEBUG: ", (MAX_LEN-seq_len))
         if (MAX_LEN - seq_len):
             padded = torch.zeros(batch_size, MAX_LEN - seq_len)
             new_mask = 1 - torch.cat([mask, self.to_var(padded)], -1)
