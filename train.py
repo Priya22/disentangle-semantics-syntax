@@ -33,7 +33,7 @@ def run(e):
     start_epoch = true_it = 0
     if e.config.resume:
         start_epoch, _, best_dev_res, test_avg_res = \
-            model.load(name="latest_bible")
+            model.load(name="latest")
         if e.config.use_cuda:
             model.cuda()
             e.log.info("transferred model to gpu")
@@ -148,7 +148,7 @@ def run(e):
                         test_perf=test_stats,
                         iteration=true_it,
                         epoch=epoch,
-                        name = 'best_bible')
+                        name = 'best')
 
                     if e.config.summarize:
                         for year, stats in test_stats.items():
@@ -187,7 +187,7 @@ def run(e):
             test_perf=test_stats,
             iteration=true_it,
             epoch=epoch + 1,
-            name="latest_bible")
+            name="latest")
 
     e.log.info("*" * 25 + " TEST EVAL: SEMANTICS " + "*" * 25)
 
