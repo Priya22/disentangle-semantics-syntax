@@ -19,7 +19,7 @@ batch_size = 1000
 parser = argparse.ArgumentParser()
 parser.add_argument('--save_file', '-s', type=str)
 parser.add_argument('--vocab_file', '-v', type=str)
-parser.add_argument('--data_dir', '-d', type=str)
+#parser.add_argument('--data_dir', '-d', type=str)
 args = parser.parse_args()
 
 def cosine_similarity(v1, v2):
@@ -83,5 +83,29 @@ with train_helper.experiment(config, config.save_prefix) as e:
     
     #load sents 
     with open('bible_train.txt', 'r') as f:
+        sents = f.readlines()
+
+    sents = [x.strip() for x in sents]
+    sents = [x for x in sents if len(x) > 0]
+
+    sent_1 = []
+    sent_2 = []
+
+    for s in sents:
+        v1, v2 = s.split("\t")
+        sent_1.append(v1)
+        sent_2.append(v2)
+
+    print(len(sent_1), len(sent_2))
+
+    y_vecs_1, z_vecs_1 = encode(sent_1)
+    y_vecs_2, z_vecs_2 = encode(sent_2)
+
+    print(len(y_vecs_1), len(y_vecs_2))
+
+    pickle.dump(y_vecs_1, open('y_vecs_1.pkl', 'wb'))
+    pickle.dump(y_vecs_2, open('y_vecs_2.pkl', 'wb'))
+    pickle.dump(z_vecs_1, open('z_vecs_1.pkl', 'wb'))
+    pickle.dump(z_vecs_2, open('z_vecs_2.pkl', 'wb'))
         
     
