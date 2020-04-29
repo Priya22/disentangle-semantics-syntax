@@ -53,7 +53,7 @@ with train_helper.experiment(config, config.save_prefix) as e:
 
     def encode(d):
         global vocab, batch_size
-        new_d = [[vocab.get(w, 0) for w in s.split(" ")] for s in d]
+        new_d = [[vocab.get(w, 0) for w in s] for s in d]
         all_y_vecs = []
         all_z_vecs = []
 
@@ -82,20 +82,28 @@ with train_helper.experiment(config, config.save_prefix) as e:
     
     
     #load sents 
-    with open('bible_train.txt', 'r') as f:
-        sents = f.readlines()
-
-    sents = [x.strip() for x in sents]
-    sents = [x for x in sents if len(x) > 0]
-
-    sent_1 = []
-    sent_2 = []
-
-    for s in sents:
-        v1, v2 = s.split("\t")
-        sent_1.append(v1)
-        sent_2.append(v2)
-
+    def load_sent(path):
+        data_pair1 = []
+        data_pair2 = []
+        with open(path) as f:
+            for line in f:
+                line = line.strip().lower()
+                if len(line):
+                    #print(line)
+                    line = line.split('\t')
+                    if len(line) == 2:
+                        data_pair1.append(line[0].split(" "))
+                        data_pair2.append(line[1].split(" "))
+                    else:
+                        #print(line)
+                        pass
+                    
+        assert len(data_pair1) == len(data_pair2)
+        print("Sample: ", data_pair1[0], data_pair2[0])
+        return data_pair1, data_pair2
+   
+    
+    sent_1, sent_2 = load_sent('./bible_train.txt')
     print(len(sent_1), len(sent_2))
 
     y_vecs_1, z_vecs_1 = encode(sent_1)
