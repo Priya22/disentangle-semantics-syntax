@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH --gres=gpu:1
+#SBATCH --partition=t4v1
+#SBATCH --qos=nopreemption
+#SBATCH --cpus-per-task=8
+#SBATCH --time=48:00:00
+#SBATCH --mem=16G
+#SBATCH --job-name=disentangle-bible-lstm
+#SBATCH --output=./logs/disentangle_bible_lstm_%j.out
+. /etc/profile.d/lmod.sh
+module use /pkgs/environment-modules/
+./run-bible-lstm.sh

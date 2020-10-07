@@ -12,7 +12,7 @@ from von_mises_fisher import VonMisesFisher
 from decorators import auto_init_args, auto_init_pytorch
 from torch.autograd import Variable
 
-MAX_LEN = 32
+MAX_LEN = 100
 
 
 class base(nn.Module):
@@ -102,9 +102,17 @@ class base(nn.Module):
         if (MAX_LEN - seq_len) > 0:
             padded = torch.zeros(batch_size, MAX_LEN - seq_len)
             new_mask = 1 - torch.cat([mask, self.to_var(padded)], -1)
+            new_mask = new_mask.unsqueeze(1).expand_as(logits)
+            # print("IF")
+            # print(new_mask.shape)
+            # print(logits.shape)
         else:
             new_mask = 1 - mask
-        new_mask = new_mask.unsqueeze(1).expand_as(logits)
+            # print("ELSE")
+            # print(new_mask.shape)
+            # print(logits.shape)
+            new_mask = new_mask.unsqueeze(-1).expand_as(logits)
+        
         logits.data.masked_fill_(new_mask.data.bool(), -float('inf'))
         loss = F.softmax(logits, -1)[:, np.arange(int(seq_len)),
                                      np.arange(int(seq_len))]
@@ -122,8 +130,9 @@ class base(nn.Module):
         if self.use_cuda:
             if isinstance(inputs, Variable):
                 inputs = inputs.cuda()
-                inputs.volatile = self.volatile
-                return inputs
+                #inputs.volatile = self.volatile
+                with torch.no_grad():
+                    return inputs
             else:
                 if not torch.is_tensor(inputs):
                     inputs = torch.from_numpy(inputs)
@@ -257,6 +266,8 @@ class vgvae(base):
         s2_vecs, sent2_mean, sent2_var, sent2_mean2, sent2_logvar2 = \
             self.sent2param(sent2, mask2)
 
+        #print("HERE: in forward.")
+
         sent1_dist = VonMisesFisher(sent1_mean, sent1_var)
         sent2_dist = VonMisesFisher(sent2_mean, sent2_var)
 
@@ -283,6 +294,7 @@ class vgvae(base):
                 [s2_vecs, sent2_syntax.unsqueeze(1).expand(-1, s2_vecs.size(1), -1)], -1)
             ploss1 = self.pos_loss(mask1, s1_vecs)
             ploss2 = self.pos_loss(mask2, s2_vecs)
+            print("PoS Loss: ", ploss1, ploss2)
 
         sent1_kl = model_utils.gauss_kl_div(
             sent1_mean2, sent1_logvar2,
@@ -350,6 +362,9 @@ class vgvae(base):
 
             if self.expe.config.pratio:
                 ploss = ploss1 + ploss2 + ploss3 + ploss4
+
+                if torch.isnan(wploss):
+                    ploss = torch.zeros_like(gkl)
             else:
                 ploss = torch.zeros_like(gkl)
 
@@ -370,15 +385,24 @@ class vgvae(base):
 
             if self.expe.config.pratio:
                 ploss = ploss1 + ploss2
+                if torch.isnan(ploss):
+                    ploss = torch.zeros_like(gkl)
             else:
                 ploss = torch.zeros_like(gkl)
 
+
+            #print("Loss components: ", )
             loss = self.expe.config.lratio * rec_logloss + \
                 self.expe.config.plratio * para_logloss + \
                 vtemp * vkl + gtemp * gkl + \
                 self.expe.config.pratio * ploss
 
             dist = torch.zeros_like(sent1_kl)
+
+        print(loss, vkl, gkl, rec_logloss, para_logloss, ploss, dist)
+
+        if torch.isnan(loss):
+            loss = torch.zeros_like(loss)
 
         return loss, vkl, gkl, rec_logloss, para_logloss, ploss, dist
 

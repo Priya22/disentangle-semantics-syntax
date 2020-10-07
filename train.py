@@ -12,6 +12,8 @@ import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def run(e):
+    e.log.info(e.experiment_dir)
+    name = e.config.exp_name
     global best_dev_res, test_bm_res, test_avg_res
 
     e.log.info("*" * 25 + " DATA PREPARATION " + "*" * 25)
@@ -33,7 +35,7 @@ def run(e):
     start_epoch = true_it = 0
     if e.config.resume:
         start_epoch, _, best_dev_res, test_avg_res = \
-            model.load(name="latest")
+            model.load(name=name + "_latest")
         if e.config.use_cuda:
             model.cuda()
             e.log.info("transferred model to gpu")
@@ -46,7 +48,7 @@ def run(e):
     e.log.info("*" * 25 + " MODEL INITIALIZATION " + "*" * 25)
 
     if e.config.summarize:
-        writer = SummaryWriter(e.experiment_dir)
+        writer = SummaryWriter(e.config.save_dir)
 
     if e.config.decoder_type.startswith("bag"):
         minibatcher = data_utils.bow_minibatcher
@@ -148,7 +150,7 @@ def run(e):
                         test_perf=test_stats,
                         iteration=true_it,
                         epoch=epoch,
-                        name = 'best')
+                        name = name + '_best')
 
                     if e.config.summarize:
                         for year, stats in test_stats.items():
@@ -187,7 +189,7 @@ def run(e):
             test_perf=test_stats,
             iteration=true_it,
             epoch=epoch + 1,
-            name="latest")
+            name=name + "_latest")
 
     e.log.info("*" * 25 + " TEST EVAL: SEMANTICS " + "*" * 25)
 
@@ -205,7 +207,7 @@ def run(e):
 
 
 if __name__ == '__main__':
-
+#def main():
     args = config.get_base_parser().parse_args()
     args.use_cuda = torch.cuda.is_available()
 
@@ -224,5 +226,10 @@ if __name__ == '__main__':
         e.log.info("*" * 25 + " ARGS " + "*" * 25)
         e.log.info(args)
         e.log.info("*" * 25 + " ARGS " + "*" * 25)
-
+        print("E: ")
+        print(e)
         run(e)
+        #return e
+
+# if __name__ == '__main__':
+#     main()

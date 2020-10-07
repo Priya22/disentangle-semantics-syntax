@@ -1,3 +1,21 @@
+#checkpoints
+*.ckpt
+
+#logs
+*.log
+
+#data etc
+bible/
+data/
+bible-vocab/
+logs/
+outputs/
+para-nmt-0.5m-vocab/
+syntactic evaluation/
+vgvae-bow-bible/
+vgvae-lstm-bible/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

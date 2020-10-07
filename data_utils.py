@@ -1,6 +1,6 @@
 import os
 import pickle
-
+from tqdm import tqdm
 import numpy as np
 
 from collections import Counter
@@ -103,7 +103,7 @@ class data_processor:
         data_pair1 = []
         data_pair2 = []
         with open(path) as f:
-            for line in f:
+            for line in tqdm(f):
                 line = line.strip().lower()
                 if len(line):
                     line = line.split('\t')
@@ -112,19 +112,23 @@ class data_processor:
                         data_pair2.append(line[1].split(" "))
                     else:
                         #self.expe.log.warning("unexpected data: " + line)
-                        print("bad line", line)
+                        #print("bad line", line)
+                        pass 
                         
         assert len(data_pair1) == len(data_pair2)
+        self.expe.log.info("Number of lines read: {}, {}".format(len(data_pair1), len(data_pair2)))
         return data_pair1, data_pair2
 
     def _data_to_idx(self, data, vocab):
         idx_pair1 = []
         idx_pair2 = []
         for d1, d2 in zip(*data):
+            assert isinstance(d1, list) and isinstance(d2, list)
             s1 = [vocab.get(w, UNK_IDX) for w in d1]
             idx_pair1.append(s1)
             s2 = [vocab.get(w, UNK_IDX) for w in d2]
             idx_pair2.append(s2)
+        self.expe.log.info("Num lines: {}, {}".format(len(idx_pair1), len(idx_pair2)))
         return np.array(idx_pair1), np.array(idx_pair2)
 
     def _load_paragram_embedding(self, path):
@@ -506,7 +510,8 @@ class bow_minibatcher:
         self.idx_pool = [idx_list[i: i + self.batch_size]
                          for i in range(0, len(self.data1), self.batch_size)]
 
-        if self.mega_batch > 1:
+        if self.mega_batch > 1: #???????
+            
             init_mega_ids = self.idx_pool[-self.mega_batch:]
             init_mega1, init_mega2, init_tgt1, init_tgt2 = [], [], [], []
             for idx in init_mega_ids:

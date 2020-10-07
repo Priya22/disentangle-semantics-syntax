@@ -1,0 +1,36 @@
+python train.py \
+    --debug 0 \
+    --save_prefix vgvae-lstm-bible \
+    --decoder_type lstm \
+    --yencoder_type bilstm \
+    --zencoder_type bilstm \
+    --n_epoch 35 \
+    --train_file data/bible_pairs.txt \
+    --eval_file data/sts_data.pkl \
+    --pre_train_emb 0 \
+    --vocab_file bible-vocab \
+    --vocab_size 50000 \
+    --exp_name bible_lstm
+    --save_dir ./bible_lstm/
+    --batch_size 64 \
+    --dropout 0.0 \
+    --l2 0.0 \
+    --max_vmf_kl_temp 1e-4 \
+    --max_gauss_kl_temp 1e-3 \
+    --zmlp_n_layer 0 \
+    --ymlp_n_layer 0 \
+    --mlp_n_layer 3 \
+    --mega_batch 20 \
+    --para_logloss_ratio 1.0 \
+    --ploss_ratio 1.0 \
+    --disc_ratio 1.0 \
+    --mlp_hidden_size 100 \
+    --ysize 50 \
+    --zsize 50 \
+    --embed_dim 50 \
+    --encoder_size 50 \
+    --decoder_size 100 \
+    --p_scramble 0.0 \
+    --print_every 100 \
+    --eval_every 1000 \
+    --summarize 0

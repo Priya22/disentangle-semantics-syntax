@@ -1,12 +1,12 @@
 python train.py \
     --debug 1 \
-    --save_prefix vgvae-exp \
+    --save_prefix vgvae-exp_og \
     --decoder_type bag_of_words \
     --yencoder_type word_avg \
     --zencoder_type word_avg \
     --n_epoch 50 \
-    --train_file para-nmt-0.5m-processed.txt \
-    --eval_file sts_data.pkl \
+    --train_file data/para-nmt-0.5m-processed.txt \
+    --eval_file data/sts_data.pkl \
     --pre_train_emb 0 \
     --vocab_file para-nmt-0.5m-vocab \
     --vocab_size 50000 \

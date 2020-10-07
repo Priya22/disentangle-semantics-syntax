@@ -99,7 +99,7 @@ class experiment:
             all_defaults[key] = get_base_parser().get_default(key)
 
         self.default_config = all_defaults
-
+        self.exp_name = config.exp_name
         config.resume = False
         if not config.debug:
             if os.path.isdir(self.experiment_dir):
@@ -121,6 +121,8 @@ class experiment:
     def experiment_dir(self):
         if self.config.debug:
             return "./"
+            #name = 
+            #return 
         else:
             # get namespace for each group of args
             arg_g = dict()
@@ -130,7 +132,7 @@ class experiment:
                 arg_g[group.title] = argparse.Namespace(**group_d)
 
             # skip default value
-            identifier = ""
+            identifier = str(self.exp_name) + "_"
             for key, value in sorted(vars(arg_g["model_configs"]).items()):
                 if getattr(self.config, key) != value:
                     identifier += key + str(getattr(self.config, key))

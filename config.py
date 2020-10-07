@@ -31,6 +31,9 @@ def get_base_parser():
                             help='vocabulary file')
     data_group.add_argument('--embed_file', type=str, default=None,
                             help='pretrained embedding file')
+    data_group.add_argument('--exp_name', type=str, default='default',
+                            help='Name of the experiment, for storing models')
+    
 
     config_group = parser.add_argument_group('model_configs')
     config_group.add_argument('-m', '--margin',
