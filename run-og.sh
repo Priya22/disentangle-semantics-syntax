@@ -1,6 +1,7 @@
 python train.py \
-    --debug 1 \
-    --save_prefix vgvae-exp_og \
+    --debug 0 \
+    --resume 1 \
+    --save_prefix vgvae-bow-og \
     --decoder_type bag_of_words \
     --yencoder_type word_avg \
     --zencoder_type word_avg \
@@ -10,13 +11,15 @@ python train.py \
     --pre_train_emb 0 \
     --vocab_file para-nmt-0.5m-vocab \
     --vocab_size 50000 \
-    --batch_size 30 \
-    --dropout 0.0 \
+    --exp_name og_bow \
+    --save_dir ./og_bow \
+    --batch_size 64 \
+    --dropout 0.3 \
     --l2 0.0 \
     --max_vmf_kl_temp 1e-4 \
     --max_gauss_kl_temp 1e-3 \
-    --zmlp_n_layer 0 \
-    --ymlp_n_layer 0 \
+    --zmlp_n_layer 1 \
+    --ymlp_n_layer 1 \
     --mlp_n_layer 3 \
     --mega_batch 20 \
     --para_logloss_ratio 1.0 \
@@ -31,4 +34,4 @@ python train.py \
     --p_scramble 0.0 \
     --print_every 100 \
     --eval_every 1000 \
-    --summarize 0
+    --summarize 1

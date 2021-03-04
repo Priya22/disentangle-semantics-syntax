@@ -136,16 +136,19 @@ class base(nn.Module):
             else:
                 if not torch.is_tensor(inputs):
                     inputs = torch.from_numpy(inputs)
-                return Variable(inputs.cuda(), volatile=self.volatile)
+                with torch.no_grad():
+                    return Variable(inputs.cuda())
         else:
             if isinstance(inputs, Variable):
                 inputs = inputs.cpu()
-                inputs.volatile = self.volatile
-                return inputs
+                #inputs.volatile = self.volatile
+                with torch.no_grad():
+                    return inputs
             else:
                 if not torch.is_tensor(inputs):
                     inputs = torch.from_numpy(inputs)
-                return Variable(inputs, volatile=self.volatile)
+                with torch.no_grad():
+                    return Variable(inputs)
 
     def to_vars(self, *inputs):
         return [self.to_var(inputs_) if inputs_ is not None and
@@ -294,7 +297,7 @@ class vgvae(base):
                 [s2_vecs, sent2_syntax.unsqueeze(1).expand(-1, s2_vecs.size(1), -1)], -1)
             ploss1 = self.pos_loss(mask1, s1_vecs)
             ploss2 = self.pos_loss(mask2, s2_vecs)
-            print("PoS Loss: ", ploss1, ploss2)
+            #print("PoS Loss: ", ploss1, ploss2)
 
         sent1_kl = model_utils.gauss_kl_div(
             sent1_mean2, sent1_logvar2,
@@ -363,7 +366,7 @@ class vgvae(base):
             if self.expe.config.pratio:
                 ploss = ploss1 + ploss2 + ploss3 + ploss4
 
-                if torch.isnan(wploss):
+                if torch.isnan(ploss):
                     ploss = torch.zeros_like(gkl)
             else:
                 ploss = torch.zeros_like(gkl)
@@ -399,7 +402,7 @@ class vgvae(base):
 
             dist = torch.zeros_like(sent1_kl)
 
-        print(loss, vkl, gkl, rec_logloss, para_logloss, ploss, dist)
+        #print(loss, vkl, gkl, rec_logloss, para_logloss, ploss, dist)
 
         if torch.isnan(loss):
             loss = torch.zeros_like(loss)

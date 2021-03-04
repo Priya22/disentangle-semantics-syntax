@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def run(e):
     e.log.info(e.experiment_dir)
-    name = e.config.exp_name
+    #name = e.config.exp_name
     global best_dev_res, test_bm_res, test_avg_res
 
     e.log.info("*" * 25 + " DATA PREPARATION " + "*" * 25)
@@ -34,8 +34,8 @@ def run(e):
 
     start_epoch = true_it = 0
     if e.config.resume:
-        start_epoch, _, best_dev_res, test_avg_res = \
-            model.load(name=name + "_latest")
+        start_epoch, _, best_dev_res, test_avg_res,  = \
+            model.load(name="latest")
         if e.config.use_cuda:
             model.cuda()
             e.log.info("transferred model to gpu")
@@ -150,7 +150,7 @@ def run(e):
                         test_perf=test_stats,
                         iteration=true_it,
                         epoch=epoch,
-                        name = name + '_best')
+                        name = 'best')
 
                     if e.config.summarize:
                         for year, stats in test_stats.items():
@@ -189,7 +189,7 @@ def run(e):
             test_perf=test_stats,
             iteration=true_it,
             epoch=epoch + 1,
-            name=name + "_latest")
+            name="latest")
 
     e.log.info("*" * 25 + " TEST EVAL: SEMANTICS " + "*" * 25)
 

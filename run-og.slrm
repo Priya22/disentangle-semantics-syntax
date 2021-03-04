@@ -3,12 +3,12 @@
 #SBATCH -n 1
 #SBATCH --gres=gpu:1
 #SBATCH --partition=p100
-#SBATCH --qos=nopreemption
+#SBATCH --qos=normal
 #SBATCH --cpus-per-task=8
-#SBATCH --time=48:00:00
+#SBATCH --time=48:30:00
 #SBATCH --mem=16G
 #SBATCH --job-name=disentangle-og
-#SBATCH --output=disentangle_og_%j.out
+#SBATCH --output=logs/disentangle_og_%j.out
 . /etc/profile.d/lmod.sh
 module use /pkgs/environment-modules/
 ./run-og.sh

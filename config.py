@@ -18,6 +18,8 @@ def get_base_parser():
     # Basics
     basic_group.add_argument('--debug', type="bool", default=False,
                              help='activation of debug mode (default: False)')
+    basic_group.add_argument('--resume', type="bool", default=True,
+                             help='resume from checkpoint (default: True)')
     basic_group.add_argument('--save_prefix', type=str, default="experiments",
                              help='saving path prefix')
 

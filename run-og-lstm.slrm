@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH --gres=gpu:1
+#SBATCH --partition=t4v1
+#SBATCH --qos=normal
+#SBATCH --cpus-per-task=16
+#SBATCH --time=72:00:00
+#SBATCH --mem=32G
+#SBATCH --job-name=disentangle-og-lstm
+#SBATCH --output=./logs/disentangle_og_lstm_%j.out
+. /etc/profile.d/lmod.sh
+module use /pkgs/environment-modules/
+./run-og-lstm.sh

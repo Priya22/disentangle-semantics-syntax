@@ -1,6 +1,7 @@
 python train.py \
     --debug 0 \
-    --save_prefix vgvae-bow-bible \
+    --resume 1 \
+    --save_prefix vgvae-bow-bible-dropout \
     --decoder_type bag_of_words \
     --yencoder_type word_avg \
     --zencoder_type word_avg \
@@ -10,15 +11,15 @@ python train.py \
     --pre_train_emb 0 \
     --vocab_file bible-vocab \
     --vocab_size 50000 \
-    --exp_name bible_bow
-    --save_dir ./bible/
+    --exp_name bible_bow \
+    --save_dir ./bible/ \
     --batch_size 64 \
-    --dropout 0.0 \
+    --dropout 0.3 \
     --l2 0.0 \
     --max_vmf_kl_temp 1e-4 \
     --max_gauss_kl_temp 1e-3 \
-    --zmlp_n_layer 0 \
-    --ymlp_n_layer 0 \
+    --zmlp_n_layer 1 \
+    --ymlp_n_layer 1 \
     --mlp_n_layer 3 \
     --mega_batch 20 \
     --para_logloss_ratio 1.0 \
@@ -33,4 +34,4 @@ python train.py \
     --p_scramble 0.0 \
     --print_every 100 \
     --eval_every 1000 \
-    --summarize 0
+    --summarize 1

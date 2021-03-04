@@ -129,7 +129,7 @@ class data_processor:
             s2 = [vocab.get(w, UNK_IDX) for w in d2]
             idx_pair2.append(s2)
         self.expe.log.info("Num lines: {}, {}".format(len(idx_pair1), len(idx_pair2)))
-        return np.array(idx_pair1), np.array(idx_pair2)
+        return np.array(idx_pair1, dtype=object), np.array(idx_pair2,dtype=object)
 
     def _load_paragram_embedding(self, path):
         with open(path, encoding="latin-1") as fp:

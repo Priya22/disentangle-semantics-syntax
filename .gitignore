@@ -14,7 +14,7 @@ para-nmt-0.5m-vocab/
 syntactic evaluation/
 vgvae-bow-bible/
 vgvae-lstm-bible/
-
+results/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
